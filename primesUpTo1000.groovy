@@ -1,11 +1,11 @@
-int i = 0;
+int i = 1;
 int j = 0;
-while(true)
+while(j!=1000)
 {
-while(i%2 != 0 && j!=1000)
+if(i%2 != 0)
 {
 System.console().println(i);
+}
 i++;
 j++;
-}
 }
