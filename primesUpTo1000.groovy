@@ -1,11 +1,17 @@
-int i = 1;
-int j = 0;
-while(j!=1000)
+boolean[] primeNumbers = new boolean[10001];
+ for(int i=2; i<10001; i++ ){primeNumbers[i]=true;}
+for(int i=2; i < Math.sqrt(10001); i++)
 {
-if(i%2 != 0)
-{
-System.console().println(i);
+	if(primeNumbers[i] == true)
+	{
+		for(int j = i+i; j < 10001; j=j+i) {
+			primeNumbers[j] = false;
+		}
+	}
 }
-i++;
-j++;
+for(int i = 0; i < 10001; i++) {
+	if(primeNumbers[i] == true)
+	{
+	System.console().println(i);
+}
 }
