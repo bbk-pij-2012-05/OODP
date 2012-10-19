@@ -28,8 +28,10 @@ public class HospitalManager {
 		patientListStart.addPatient(p9);
 
 		patientListStart.traverse();
-
-
+		patientListStart.deletePatient(p2);
+		patientListStart.deletePatient(p2);
+		patientListStart.traverse();
 	}
 
 }
+

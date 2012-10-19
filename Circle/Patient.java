@@ -30,19 +30,22 @@ public class Patient {
 	}
 
 	public boolean deletePatient(Patient p) {
-		if(this.nextPatient.name.equals(p.name)){
+		if(this.nextPatient.name.equals(front.name)) {
+			System.out.println("Not there.");
+			return false;
+		}
+
+		else{
+			if(this.nextPatient.name.equals(p.name)){
 			System.out.println("Gone.");
 			this.nextPatient = this.nextPatient.nextPatient;
 			this.nextPatient.prevPatient = this;
 			return true;
-		} else if(this.nextPatient.name.equals(front.name)) {
-			System.out.println("Not there.");
-			return false;
-		} else{
-			return this.deletePatient(p.nextPatient);
+			}
+			else{
+				return this.deletePatient(p.nextPatient);
+			}
 		}
-
-
 	}
 
 	public void traverse() {
