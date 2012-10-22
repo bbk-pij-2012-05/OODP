@@ -17,6 +17,7 @@ public class HospitalManager {
 		Patient p7 = new Patient("Jim", 38);
 		Patient p8 = new Patient("John", 72);
 		Patient p9 = new Patient("Liz", 15);
+		Patient p10 = new Patient("Joe", 25);
 		patientListStart.addPatient(p1);
 		patientListStart.addPatient(p2);
 		patientListStart.addPatient(p3);
@@ -29,9 +30,14 @@ public class HospitalManager {
 
 		patientListStart.traverse();
 		patientListStart.deletePatient(p2);
-		patientListStart.deletePatient(p2);
+		try{
+			patientListStart.deletePatient(p10);
+		}
+		catch(Exception e){
+			System.out.println("Oops! That doesn't exist.");
+		}
+
 		patientListStart.traverse();
 	}
 
 }
-
