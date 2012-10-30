@@ -42,4 +42,11 @@ public class TestStack {
 			String response = ss.peek();
 			assertEquals(response, "Joe");
 	}
+
+		@Test
+		public void testEmpty(){
+			ss = new ArrayStringStack();
+			boolean response = ss.isEmpty();
+			assertTrue(response);
+	}
 }
