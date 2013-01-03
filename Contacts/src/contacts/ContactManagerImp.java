@@ -31,12 +31,6 @@ public class ContactManagerImp implements ContactManager {
 
 	public void init() {
 		importData();
-		while (!meetingList.iterator().next().equals(null)) {
-			System.out.print("\nMeetings: " + meetingList.iterator().next());
-		}
-		while (contactList != null) {
-			System.out.print("\nContacts: " + contactList.iterator().next());
-		}
 
 		addNewContact("Joe", "IB Tech");
 		addNewContact("Liz", "IB Tech");
@@ -86,6 +80,7 @@ public class ContactManagerImp implements ContactManager {
 							Integer.parseInt(contactId));
 					c.addNotes(notes);
 					contactList.add(c);
+					contactCount++;
 					lineIn = br.readLine();
 				}
 			}
@@ -112,7 +107,6 @@ public class ContactManagerImp implements ContactManager {
 							meetingContacts.add(ci);
 							i++;
 						}
-					// FIXXXXXXXX MEEEEEEEEEEE
 					date = readLine[2];
 					try{
 						meetingNotes = readLine[3];
@@ -127,11 +121,13 @@ public class ContactManagerImp implements ContactManager {
 								Integer.parseInt(meetingId), cal,
 								meetingContacts);
 						meetingList.add(futureMeeting);
+						meetingCount++;
 					} else if (cal.before(Calendar.getInstance())) {
 						Meeting pastMeet = new PastMeetingImp(
 								Integer.parseInt(meetingId), cal,
 								meetingContacts, meetingNotes);
 						meetingList.add(pastMeet);
+						meetingCount++;
 					}
 					lineIn = br.readLine();
 				}
