@@ -32,6 +32,34 @@ public class ContactManagerImp implements ContactManager {
 	public void init() {
 		importData();
 
+		System.out.println("What would you like to do?");
+		System.out.println("1) Add Contact");
+		System.out.println("2) Add Meeting");
+		System.out.println("3) View Prior Meetings");
+		System.out.println("4) View Future Meetings");
+
+		int in = 0;
+		try {
+			in = System.in.read();
+		} catch (IOException e) {
+			System.out.print("That's not a choice, try again");
+			e.printStackTrace();
+		}
+		if(in == 1){
+			System.out.println("Name: ");
+			String name = System.console().readLine();
+			System.out.println("Notes: ");
+			String notes = System.console().readLine();
+			addNewContact(name, notes);
+		}
+		
+		
+		
+		
+		
+		
+		/*
+		
 		addNewContact("Joe", "IB Tech");
 		addNewContact("Liz", "IB Tech");
 		addNewContact("Eoin", "IB Tech");
@@ -56,7 +84,7 @@ public class ContactManagerImp implements ContactManager {
 			System.out.println("Meeting: " + m.getId());
 		}
 		addMeetingNotes(1, "Notes go here");
-		flush();
+		flush();*/
 	}
 
 	public void importData() {
@@ -288,6 +316,7 @@ public class ContactManagerImp implements ContactManager {
 		Contact newContact = new ContactImp(name, ++contactCount);
 		newContact.addNotes(notes);
 		contactList.add(newContact);
+		System.out.println("Contact Added.");
 	}
 
 	@Override
