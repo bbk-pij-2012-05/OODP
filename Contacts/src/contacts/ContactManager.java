@@ -1,5 +1,6 @@
 
 import java.io.FileNotFoundException;
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
@@ -119,7 +120,7 @@ public interface ContactManager {
 	 * @throws NullPointerException
 	 *             if any of the arguments is null
 	 */
-	void addNewPastMeeting(Set<Contact> contacts, Calendar date, String text);
+	int addNewPastMeeting(Set<Contact> contacts, Calendar date, String text);
 
 	/**
 	 * Add notes to a meeting.
@@ -163,7 +164,7 @@ public interface ContactManager {
 	 * @throws IllegalArgumentException
 	 *             if any of the IDs does not correspond to a real contact
 	 */
-	Set<Contact> getContacts(Set<Integer> ids);
+	Set<Contact> getContacts(int... ids);
 
 	/**
 	 * Returns a list with the contacts whose name contains that string.
@@ -196,7 +197,7 @@ public interface ContactManager {
 	
 	void viewCalendar();
 	
-	Calendar findTime(String time);
+	Calendar findTime(String time) throws ParseException;
 	
 	boolean isInt(String in);
 	

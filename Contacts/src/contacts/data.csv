@@ -1,3 +1,7 @@
 contacts
+2,joe,fsd
+3,Jim,f
+1,sam,
 meetings
+1,2;joe;fsd:3;Jim;f:1;sam;:,Sun Feb 12 12:00:00 GMT 2012
 \
