@@ -1,0 +1,38 @@
+Updated working I/O and fixing meeting retrieval
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# Committer: bbk-pij-2012-05 <Bri@Breeze.local>
+#
+# On branch master
+#
+# Initial commit
+#
+# Changes to be committed:
+#   (use "git rm --cached <file>..." to unstage)
+#
+#	new file:   ContactManagerImp.java
+#
+# Untracked files:
+#   (use "git add <file>..." to include in what will be committed)
+#
+#	Contact.class
+#	Contact.java
+#	ContactImp.class
+#	ContactImp.java
+#	ContactManager.class
+#	ContactManager.java
+#	ContactManagerImp.class
+#	FutureMeeting.class
+#	FutureMeeting.java
+#	FutureMeetingImp.class
+#	FutureMeetingImp.java
+#	Meeting.class
+#	Meeting.java
+#	MeetingImp.class
+#	MeetingImp.java
+#	PastMeeting.class
+#	PastMeeting.java
+#	PastMeetingImp.class
+#	PastMeetingImp.java
+#	data.csv

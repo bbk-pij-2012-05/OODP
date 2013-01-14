@@ -1,4 +1,3 @@
-package contacts;
 
 import java.util.ArrayList;
 
@@ -9,6 +8,7 @@ public class ContactImp implements Contact {
 	ArrayList<String> contactNotes = new ArrayList<String>();
 
 	public ContactImp(String name, int id){
+		System.out.println("Making Contact.");
 		contactName = name;
 		contactId = id;
 	}

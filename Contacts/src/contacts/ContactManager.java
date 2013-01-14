@@ -1,4 +1,3 @@
-package contacts;
 
 import java.io.FileNotFoundException;
 import java.util.Calendar;
@@ -27,7 +26,7 @@ public interface ContactManager {
 	 *             if the meeting is set for a time in the past, of if any
 	 *             contact is unknown / non-existent
 	 */
-	int addFutureMeeting(Set<Contact> contacts, Calendar date);
+	int addFutureMeeting(Set<Contact> contacts, Calendar date) throws IllegalArgumentException;
 
 	/**
 	 * Returns the PAST meeting with the requested ID, or null if it there is
@@ -69,7 +68,7 @@ public interface ContactManager {
 	 * will be chronologically sorted and will not contain any duplicates.
 	 * 
 	 * @param contact
-	 *            one of the user’s contacts
+	 *            one of the users contacts
 	 * @return the list of future meeting(s) scheduled with this contact (maybe
 	 *         empty).
 	 * @throws IllegalArgumentException
@@ -97,13 +96,13 @@ public interface ContactManager {
 	 * will be chronologically sorted and will not contain any duplicates.
 	 * 
 	 * @param contact
-	 *            one of the user’s contacts
+	 *            one of the users contacts
 	 * @return the list of future meeting(s) scheduled with this contact (maybe
 	 *         empty).
 	 * @throws IllegalArgumentException
 	 *             if the contact does not exist
 	 */
-	List<PastMeeting> getPastMeetingList(Contact contact);
+	List<Meeting> getPastMeetingList(Contact contact);
 
 	/**
 	 * Create a new record for a meeting that took place in the past.
@@ -164,7 +163,7 @@ public interface ContactManager {
 	 * @throws IllegalArgumentException
 	 *             if any of the IDs does not correspond to a real contact
 	 */
-	Set<Contact> getContacts(int ids);
+	Set<Contact> getContacts(Set<Integer> ids);
 
 	/**
 	 * Returns a list with the contacts whose name contains that string.
@@ -177,7 +176,10 @@ public interface ContactManager {
 	 */
 
 	Set<Contact> getContacts(String name);
-
+	
+	Contact getContact(String name);
+	
+	
 	/**
 	 * Save all data to disk.
 	 * 
@@ -185,4 +187,17 @@ public interface ContactManager {
 	 * user requests it.
 	 */
 	void flush();
+	
+	void editMeetingNotes();
+	
+	void addMeetingChoice();
+	
+	void findContactChoice();
+	
+	void viewCalendar();
+	
+	Calendar findTime(String time);
+	
+	boolean isInt(String in);
+	
 }
