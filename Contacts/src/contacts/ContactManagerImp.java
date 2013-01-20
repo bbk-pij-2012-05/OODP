@@ -1,3 +1,4 @@
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -26,12 +27,13 @@ public class ContactManagerImp implements ContactManager {
 	int meetingCount = 0;
 
 	public static void main(String[] args) {
-		ContactManagerImp manage = new ContactManagerImp();
-		manage.init();
+		ContactManagerImp m = new ContactManagerImp();
+		m.init();
 
 	}
-
-	public void init() {
+	
+public void init() {
+		
 		while (true) {
 			importData();
 
@@ -60,12 +62,7 @@ public class ContactManagerImp implements ContactManager {
 				System.out.println("Notes: ");
 				String notes = System.console().readLine();
 				addNewContact(name, notes);
-				/*
-				 * NOT WORKING......... Iterator<Contact> contactListIterator =
-				 * contactList.iterator(); while (contactListIterator.hasNext())
-				 * { System.out.print("Contact:  " +
-				 * contactListIterator.next().getName()); }
-				 */
+				
 			} else if (in == 2) {
 				findContactChoice();
 			} else if (in == 3) {
@@ -81,7 +78,7 @@ public class ContactManagerImp implements ContactManager {
 			}
 		}
 	}
-
+	
 	public void importData() {
 		try {
 			File f = new File("data.csv");
@@ -107,8 +104,10 @@ public class ContactManagerImp implements ContactManager {
 					} catch (ArrayIndexOutOfBoundsException ae) {
 
 					}
-					contactList.add(c);
-					contactCount++;
+					if (!contains(c)) {
+						contactList.add(c);
+						contactCount++;
+					}
 					lineIn = br.readLine();
 				}
 			}
@@ -126,16 +125,24 @@ public class ContactManagerImp implements ContactManager {
 							&& !attendees[i].equalsIgnoreCase("")) {
 						contact = attendees[i].split("\\;");
 						contactId = contact[0];
-						name = contact[1];
+						int compareId = Integer.parseInt(contactId);
+						Iterator<Contact> cIt = contactList.iterator();
+						while(cIt.hasNext()){
+							Contact c = cIt.next();
+							if(c.getId() == compareId){
+								meetingContacts.add(c);
+							}
+						}
+						/*name = contact[1];
 						ContactImp ci = new ContactImp(name,
-								Integer.parseInt(contactId));
+							//	Integer.parseInt(contactId));
 						try {
 							notes = contact[2];
 							ci.addNotes(notes);
 						} catch (ArrayIndexOutOfBoundsException ae) {
 
 						}
-						meetingContacts.add(ci);
+						meetingContacts.add(c);*/
 						i++;
 					}
 					date = readLine[2];
@@ -161,18 +168,13 @@ public class ContactManagerImp implements ContactManager {
 						meetingCount++;
 					}
 
-					Iterator<Meeting> meetingListIterator = meetingList
-							.iterator();
-					while (meetingListIterator.hasNext()) {
-						Meeting m = meetingListIterator.next();
-					}
-
 					lineIn = br.readLine();
 				}
 			}
 			f.delete();
 			br.close();
-		} catch (ArrayIndexOutOfBoundsException | IOException | ParseException IOE) {
+		} catch (NullPointerException | ArrayIndexOutOfBoundsException
+				| IOException | ParseException IOE) {
 			// IOE.printStackTrace();
 		}
 	}
@@ -190,14 +192,33 @@ public class ContactManagerImp implements ContactManager {
 	}
 
 	@Override
-	public PastMeeting getPastMeeting(int id) throws IllegalArgumentException {
-		return (PastMeeting) getMeeting(id);
+	public PastMeeting getPastMeeting(int id) {
+		try{
+			PastMeeting pm = (PastMeeting) getMeeting(id);
+			if(pm == null){
+				return null;
+			}
+			return pm;
+		}catch(IllegalArgumentException ie){
+			System.out.println("Sorry, there is only a future meeting with that ID.");
+		}
+		return null;
 	}
 
 	@Override
 	public FutureMeeting getFutureMeeting(int id)
 			throws IllegalArgumentException {
-		return (FutureMeeting) getMeeting(id);
+		Meeting m = getMeeting(id);
+		if((m instanceof PastMeetingImp) == false && m != null){
+			Meeting temp = getMeeting(id);
+			FutureMeeting future = new FutureMeetingImp(temp.getId(), temp.getDate(), temp.getContacts());
+			return future;
+		}
+		else if(m instanceof PastMeetingImp){
+			throw new IllegalArgumentException();
+		}
+		else
+			return null;
 	}
 
 	@Override
@@ -350,7 +371,7 @@ public class ContactManagerImp implements ContactManager {
 				Contact c = (Contact) people[i];
 				if (c.getId() == num) {
 					theContacts.add(c);
-					System.out.print(c.getId() + "  num:  " + num);
+					// System.out.print(c.getId() + "  num:  " + num);
 				}
 			}
 		}
@@ -393,26 +414,31 @@ public class ContactManagerImp implements ContactManager {
 			pw.println("meetings");
 			while (meetingListIterator.hasNext()) {
 				Meeting m = meetingListIterator.next();
-				Set<Contact> gotContacts = (Set<Contact>) m.getContacts();
-				Iterator<Contact> meetingContactsIt = gotContacts.iterator();
-				pw.write("" + m.getId());
-				pw.write(CSV_SEPARATOR);
-				while (meetingContactsIt.hasNext()) {
-					Contact mContact = meetingContactsIt.next();
-					int mId = mContact.getId();
-					pw.write("" + mId);
-					pw.write(";");
-					pw.write(mContact.getName());
-					pw.write(";");
-					pw.write(mContact.getNotes() + ":");
-				}
-				pw.write(CSV_SEPARATOR);
-				Calendar cal = m.getDate();
-				Date d = cal.getTime();
-				pw.write(d.toString() + "\n");
-				pw.write(CSV_SEPARATOR);
-				if (m instanceof PastMeeting) {
-					pw.write(((PastMeeting) m).getNotes());
+				Iterator<Contact> meetingContactsIt = m.getContacts().iterator();
+				String num = Integer.toString(m.getId());
+				if (num != null && num != "") {
+					pw.write(num);
+					pw.write(CSV_SEPARATOR);
+					while (meetingContactsIt.hasNext()) {
+						Contact mContact = meetingContactsIt.next();
+						String mId = Integer.toString(mContact.getId());
+						pw.write(mId);
+						pw.write(";");
+						pw.write(mContact.getName());
+						pw.write(";");
+						pw.write(mContact.getNotes() + ":");
+					}
+					pw.write(CSV_SEPARATOR);
+					Calendar cal = m.getDate();
+					Date d = cal.getTime();
+					pw.write(d.toString());
+					pw.write(CSV_SEPARATOR + "\n");
+					if (m instanceof PastMeeting) {
+						//pw.write("Made it here.");
+						PastMeeting pm = (PastMeeting) m;
+						if (pm.getNotes() != null)
+							pw.write(pm.getNotes());
+					}	
 				}
 			}
 			pw.write("\\");
@@ -508,6 +534,12 @@ public class ContactManagerImp implements ContactManager {
 						System.out.println(tempMeeting.getDate().getTime());
 						ifIsPastMeeting(tempMeeting);
 						printMeetingContacts(tempMeeting.getContacts());
+						/*Set<Contact> cons = tempMeeting.getContacts();
+						Iterator<Contact> conIt = cons.iterator();
+						while(conIt.hasNext()){
+							Contact p = conIt.next();
+							System.out.println(p.getName());
+						}*/
 					}
 				}
 
@@ -653,14 +685,19 @@ public class ContactManagerImp implements ContactManager {
 			}
 			try {
 				int meetingChoice = Integer.parseInt(choice);
+				// System.out.println(it.next().getDate());
+				Meeting tempM;
 				while (it.hasNext()) {
-					Meeting tempM = it.next();
+					tempM = it.next();
 					if (tempM.getId() == meetingChoice) {
 						PastMeeting pm = (PastMeeting) tempM;
-						String notes = pm.getNotes();
+						//String notes = pm.getNotes();
 						System.out.println("Enter your notes: ");
-						notes += System.console().readLine();
-						addMeetingNotes(meetingChoice, notes);
+						String notes = System.console().readLine();
+						pm.addNotes(notes);
+						meetingList.remove(tempM);
+						meetingList.add(pm);
+						// addMeetingNotes(meetingChoice, notes);
 						flag = false;
 					}
 				}
@@ -683,4 +720,26 @@ public class ContactManagerImp implements ContactManager {
 
 	}
 
+	public Boolean contains(Contact c) {
+		Iterator<Contact> theIT = contactList.iterator();
+		while (theIT.hasNext()) {
+			Contact con = theIT.next();
+			if (con.getId() == c.getId()) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public void emptyLists(){
+		for (Iterator<Contact> conIt = contactList.iterator(); conIt.hasNext();) {
+			conIt.next();
+			conIt.remove();
+		}
+		for (Iterator<Meeting> meetIt = meetingList.iterator(); meetIt.hasNext();) {
+		    meetIt.next();
+			meetIt.remove();
+		}
+		
+	}
 }
