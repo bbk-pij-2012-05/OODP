@@ -243,10 +243,7 @@ public class ContactManagerImp implements ContactManager {
 				}
 			}
 		}
-		if (futureMeetings != null) {
 			return futureMeetings;
-		} else
-			return null;
 	}
 
 	@Override
@@ -260,10 +257,7 @@ public class ContactManagerImp implements ContactManager {
 				futureMeetings.add(m);
 			}
 		}
-		if (futureMeetings != null) {
 			return futureMeetings;
-		} else
-			return null;
 	}
 
 	public synchronized List<Meeting> getPastMeetingList(Calendar date) {
@@ -276,11 +270,7 @@ public class ContactManagerImp implements ContactManager {
 				pastMeetings.add(m);
 			}
 		}
-		if (pastMeetings != null) {
 			return pastMeetings;
-		} else
-			return null;
-
 	}
 
 	@Override
@@ -299,10 +289,8 @@ public class ContactManagerImp implements ContactManager {
 				}
 			}
 		}
-		if (pastMeetings != null) {
 			return pastMeetings;
-		} else
-			return null;
+	
 	}
 
 	@Override
@@ -644,8 +632,8 @@ public class ContactManagerImp implements ContactManager {
 					flag = true;
 				} else if (cal.before(Calendar.getInstance())) {
 					System.out.print("Enter meeting notes: ");
-					String meetingNotes = System.console().readLine();
-					int test = addNewPastMeeting(people, cal, meetingNotes);
+					//String meetingNotes = System.console().readLine();
+					//int test = addNewPastMeeting(people, cal, meetingNotes);
 					flag = true;
 				} else {
 					flag = false;
