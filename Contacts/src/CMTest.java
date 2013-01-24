@@ -1,6 +1,15 @@
 import static org.junit.Assert.*;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -16,7 +25,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class CMTest extends ContactManagerImp {
-
+	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+	private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
 	Contact c;
 	Contact c2;
 	Set<Contact> conList;
@@ -38,12 +48,9 @@ public class CMTest extends ContactManagerImp {
 
 	@Before
 	public void setUp() throws Exception {
+		System.setOut(new PrintStream(outContent));
+	    System.setErr(new PrintStream(errContent));
 		emptyLists();
-		// addNewContact("Joe", "notes");
-		// addNewContact("Liz", "more notes");
-		// conList = new HashSet<Contact>();
-		// conList.add(getContact("Joe"));
-		// conList.add(getContact("Liz"));
 		d = new Date();
 		String pastTime = "13/02/2011 2:00";
 		String futureTime = "10/05/2013 4:30";
@@ -60,6 +67,8 @@ public class CMTest extends ContactManagerImp {
 
 	@After
 	public void tearDown() throws Exception {
+		System.setOut(null);
+	    System.setErr(null);
 	}
 
 	// @Test
@@ -245,10 +254,8 @@ public class CMTest extends ContactManagerImp {
 			addNewContact("Liz", "more notes");
 			Contact c = getContact("Joe");
 			assertEquals("Joe", c.getName());
-		 
 	 }
 	 
-	  
 	 @Test 
 	 public void testIsInt() {
 		 int i = 3;
@@ -259,36 +266,42 @@ public class CMTest extends ContactManagerImp {
 	 
 	 @Test 
 	 public void testFindTime() {
-		 
+		Date date;
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy kk:mm");
+		Calendar pre = Calendar.getInstance();
+		Calendar post = Calendar.getInstance();
+		Calendar before = Calendar.getInstance();
+		Calendar after = Calendar.getInstance();
+		try{
+		date = dateFormat.parse("13/02/2011 2:00");
+		pre.setTime(date);
+		date = dateFormat.parse("10/05/2013 4:30");
+		post.setTime(date);
+		before = findTime("13/02/2011 2:00");
+		after = findTime("10/05/2013 4:30");
+		}catch(ParseException pe){
+			pe.printStackTrace();
+		}
+		assertEquals(0, before.compareTo(pre));
+		assertEquals(0, after.compareTo(post));
 	 }
 	 
-	 /*@Test 
-	 public void testViewCalendar() { 
-
-	 }
-	 
-	 @Test 
-	 public void testFindContactChoice() { 
-		 
-		 
-	 }
-	 @Test 
-	 public void testAddMeetingChoice() {
-		 
-	 }
-	 }
-	 
-	 @Test 
+	@Test 
 	 public void testPrintMeetingContacts() {
+		addNewContact("Joe", "notes");
+		printMeetingContacts(contactList);
+		String s = outContent.toString();
+		assertTrue(s.contains("ID: 1"));
+		assertTrue(s.contains("Name: Joe"));
+		assertTrue(s.contains("Notes: notes"));
+	}
 	 
-	 }
-	 
-	 @Test public void testEditMeetingNotes() { 
+	@Test public void testEditMeetingNotes() { 
 	 
 		 
 	 }
 	 
-	 @Test public void testIfIsPastMeeting() { 
+	/*@Test public void testIfIsPastMeeting() { 
 	 
 	 }
 	 }
