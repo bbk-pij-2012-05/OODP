@@ -27,7 +27,7 @@ public class ContactManagerImp implements ContactManager {
 	int contactCount = 0;
 	int meetingCount = 0;
 
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		ContactManagerImp m = new ContactManagerImp();
 		m.init();
 	}
@@ -81,7 +81,7 @@ public class ContactManagerImp implements ContactManager {
 				System.exit(0);
 			}
 		}
-	}
+	}*/
 
 	public void importData() {
 		try {
@@ -164,11 +164,10 @@ public class ContactManagerImp implements ContactManager {
 					lineIn = br.readLine();
 				}
 			}
-			// f.delete();
 			br.close();
 		} catch (NullPointerException | ArrayIndexOutOfBoundsException
 				| IOException | ParseException IOE) {
-			// IOE.printStackTrace();
+			IOE.printStackTrace();
 		}
 	}
 
