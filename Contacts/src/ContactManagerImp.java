@@ -26,62 +26,8 @@ public class ContactManagerImp implements ContactManager {
 	// implementation, as it sets the ID of the contact. But for now, it works.
 	int contactCount = 0;
 	int meetingCount = 0;
-
-	/*public static void main(String[] args) {
-		ContactManagerImp m = new ContactManagerImp();
-		m.init();
-	}
-
-	// Main method
-	public void init() {
-		// Make sure this is BEFORE the flag.
-		importData();
-		// Keep program running until user shuts it down.
-		while (true) {
-
-			System.out.println(meetingList.size());
-
-			System.out.println("\nWhat would you like to do?");
-			System.out.println("1) Add Contact");
-			System.out.println("2) Get Contact");
-			System.out.println("3) Add New Meeting");
-			System.out.println("4) View Meeting");
-			System.out.println("5) Edit Meeting Notes");
-			System.out.println("6) Exit");
-
-			String name;
-
-			int in = 0;
-			boolean choiceFlag = true;
-			while ((in == 0 || in < 0 || in > 5) && choiceFlag == true) {
-				String choice = System.console().readLine();
-				if (isInt(choice)) {
-					in = Integer.parseInt(choice);
-					choiceFlag = false;
-				}
-			}
-			if (in == 1) {
-				System.out.println("Name: ");
-				name = System.console().readLine();
-				System.out.println("Notes: ");
-				String notes = System.console().readLine();
-				addNewContact(name, notes);
-
-			} else if (in == 2) {
-				findContactChoice();
-			} else if (in == 3) {
-				addMeetingChoice();
-
-			} else if (in == 4) {
-				viewCalendar();
-			} else if (in == 5) {
-				editMeetingNotes();
-			} else if (in == 6) {
-				flush();
-				System.exit(0);
-			}
-		}
-	}*/
+	DateFormat dateFormat = new SimpleDateFormat(
+			"EEE MMM dd kk:mm:ss zzz yyyy");
 
 	public void importData() {
 		try {
@@ -91,8 +37,7 @@ public class ContactManagerImp implements ContactManager {
 			String lineIn = br.readLine();
 			String[] readLine, contact, attendees;
 			String contactId, name, notes, meetingId, date, meetingNotes;
-			DateFormat dateFormat = new SimpleDateFormat(
-					"EEE MMM dd kk:mm:ss zzz yyyy");
+			
 			if (lineIn.equalsIgnoreCase("contacts")) {
 				lineIn = br.readLine();
 				while (!lineIn.equalsIgnoreCase("")
@@ -273,9 +218,9 @@ public class ContactManagerImp implements ContactManager {
 	}
 
 	@Override
-	public synchronized List<Meeting> getPastMeetingList(Contact contact) {
+	public synchronized List<PastMeeting> getPastMeetingList(Contact contact) {
 		Iterator<Meeting> meetingListIterator = meetingList.iterator();
-		List<Meeting> pastMeetings = new ArrayList<Meeting>();
+		List<PastMeeting> pastMeetings = new ArrayList<PastMeeting>();
 		while (meetingListIterator.hasNext()) {
 			Meeting m = meetingListIterator.next();
 			Set<Contact> attendees = m.getContacts();
@@ -283,7 +228,7 @@ public class ContactManagerImp implements ContactManager {
 			while (contactIt.hasNext()) {
 				if (contactIt.next().getId() == contact.getId()) {
 					if (m instanceof PastMeeting) {
-						pastMeetings.add(m);
+						pastMeetings.add((PastMeeting)m);
 					}
 				}
 			}
@@ -293,7 +238,7 @@ public class ContactManagerImp implements ContactManager {
 	}
 
 	@Override
-	public synchronized int addNewPastMeeting(Set<Contact> contacts, Calendar date, String text) {
+	public synchronized void addNewPastMeeting(Set<Contact> contacts, Calendar date, String text) {
 		if (contacts == null || date == null || text == null) {
 			throw new NullPointerException();
 		}
@@ -313,7 +258,7 @@ public class ContactManagerImp implements ContactManager {
 		MeetingImp newPastMeeting = new PastMeetingImp(++meetingCount, date,
 				contacts, text);
 		meetingList.add(newPastMeeting);
-		return newPastMeeting.ID;
+		//return newPastMeeting.ID;
 	}
 
 	@Override
@@ -427,7 +372,6 @@ public class ContactManagerImp implements ContactManager {
 		}
 	}
 
-	@Override
 	public synchronized Contact getContact(String name) {
 		Contact temp;
 		Iterator<Contact> it = contactList.iterator();
@@ -460,7 +404,6 @@ public class ContactManagerImp implements ContactManager {
 	public synchronized Calendar findTime(String time) throws ParseException {
 
 		Date date;
-		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy kk:mm");
 		date = dateFormat.parse(time);
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
@@ -483,10 +426,10 @@ public class ContactManagerImp implements ContactManager {
 				found = getContact(personToFind);
 				if (found != null) {
 					List<Meeting> fmList = getFutureMeetingList(found);
-					List<Meeting> pmList = getPastMeetingList(found);
+					List<PastMeeting> pmList = getPastMeetingList(found);
 					ListIterator<Meeting> fmListIterator = fmList
 							.listIterator();
-					ListIterator<Meeting> pmListIterator = pmList
+					ListIterator<PastMeeting> pmListIterator = pmList
 							.listIterator();
 					while (fmListIterator.hasNext()) {
 						Meeting temp = fmListIterator.next();
@@ -567,7 +510,7 @@ public class ContactManagerImp implements ContactManager {
 		}
 	}
 
-	public synchronized void findContactChoice() {
+	public void findContactChoice() {
 		Boolean findPerson = true;
 		while (findPerson) {
 			System.out.println("Who do you want to find?  ");
@@ -610,7 +553,6 @@ public class ContactManagerImp implements ContactManager {
 				flag = false;
 			}
 		}
-
 		int[] findContacts = new int[contactsToFind.size()];
 		for (int i = 0; i < findContacts.length; i++) {
 			findContacts[i] = contactsToFind.get(i).intValue();
@@ -631,8 +573,6 @@ public class ContactManagerImp implements ContactManager {
 					flag = true;
 				} else if (cal.before(Calendar.getInstance())) {
 					System.out.print("Enter meeting notes: ");
-					//String meetingNotes = System.console().readLine();
-					//int test = addNewPastMeeting(people, cal, meetingNotes);
 					flag = true;
 				} else {
 					flag = false;
@@ -643,7 +583,6 @@ public class ContactManagerImp implements ContactManager {
 			}
 		}
 	}
-
 	public void printMeetingContacts(Set<Contact> contactSet) {
 		Iterator<Contact> setIt = contactSet.iterator();
 		System.out.println("Meeting Contacts: ");
@@ -654,7 +593,6 @@ public class ContactManagerImp implements ContactManager {
 			System.out.println("Notes: " + tempContact.getNotes());
 		}
 	}
-
 	public synchronized void editMeetingNotes() {
 		Boolean flag = true;
 		Iterator<Meeting> it = meetingList.iterator();
@@ -668,35 +606,34 @@ public class ContactManagerImp implements ContactManager {
 			}
 			try {
 				int meetingChoice = Integer.parseInt(choice);
-				// System.out.println(it.next().getDate());
 				Meeting tempM;
 				while (it.hasNext()) {
 					tempM = it.next();
 					if (tempM.getId() == meetingChoice) {
-						PastMeeting pm = (PastMeeting) tempM;
-						// String notes = pm.getNotes();
-						System.out.println("Enter your notes: ");
-						String notes = System.console().readLine();
-						pm.addNotes(notes);
-						meetingList.remove(tempM);
-						meetingList.add(pm);
-						// addMeetingNotes(meetingChoice, notes);
+						editNotes(tempM);
 						flag = false;
 					}
 				}
 			} catch (ClassCastException | NumberFormatException ne) {
-				// ne.printStackTrace();
 				flag = true;
 			}
 		}
 	}
 
+	public void editNotes(Meeting m){
+		PastMeeting pm = (PastMeeting) m;
+		System.out.println("Enter your notes: ");
+		String notes = System.console().readLine();
+		pm.addNotes(notes);
+		meetingList.remove(m);
+		meetingList.add(pm);
+	}
+	
 	public void ifIsPastMeeting(Meeting m) {
 		try {
 			PastMeeting past = (PastMeeting) m;
 			if (past.getNotes() != null)
 				System.out.println("Meeting Notes: " + past.getNotes());
-
 		} catch (ClassCastException ce) {
 			ce.getStackTrace();
 		}
@@ -712,18 +649,5 @@ public class ContactManagerImp implements ContactManager {
 			}
 		}
 		return false;
-	}
-
-	public void emptyLists() {
-		for (Iterator<Contact> conIt = contactList.iterator(); conIt.hasNext();) {
-			conIt.next();
-			conIt.remove();
-		}
-		for (Iterator<Meeting> meetIt = meetingList.iterator(); meetIt
-				.hasNext();) {
-			meetIt.next();
-			meetIt.remove();
-		}
-
 	}
 }

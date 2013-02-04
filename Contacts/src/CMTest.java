@@ -1,19 +1,15 @@
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -50,7 +46,6 @@ public class CMTest extends ContactManagerImp {
 	public void setUp() throws Exception {
 		System.setOut(new PrintStream(outContent));
 	    System.setErr(new PrintStream(errContent));
-		emptyLists();
 		d = new Date();
 		String pastTime = "13/02/2011 2:00";
 		String futureTime = "10/05/2013 4:30";
@@ -69,6 +64,8 @@ public class CMTest extends ContactManagerImp {
 	public void tearDown() throws Exception {
 		System.setOut(null);
 	    System.setErr(null);
+	    contactList.clear();
+	    meetingList.clear();
 	}
 
 	// @Test
@@ -164,8 +161,8 @@ public class CMTest extends ContactManagerImp {
 		addNewPastMeeting(contactList, pastCal, "notes");
 		Iterator<Contact> it = contactList.iterator();
 		Contact c = it.next();
-		List<Meeting> meetings = getPastMeetingList(c);
-		Iterator<Meeting> mIt = meetings.iterator();
+		List<PastMeeting> meetings = getPastMeetingList(c);
+		Iterator<PastMeeting> mIt = meetings.iterator();
 		Meeting m = mIt.next();
 		assertEquals(1, m.getId());
 	}
@@ -174,10 +171,10 @@ public class CMTest extends ContactManagerImp {
 	public void testAddNewPastMeeting() {
 		addNewContact("Joe", "notes");
 		addNewContact("Liz", "more notes");
-		int i = addNewPastMeeting(contactList, pastCal, "notes");
-		Meeting m = getMeeting(i);
+		addNewPastMeeting(contactList, pastCal, "notes");
+		Meeting m = getMeeting(1);
 		Boolean check = m.getDate().equals(pastCal);
-		assertEquals(1, i);
+		assertEquals(1, m.getId());
 		assertTrue(check);
 	}
 
@@ -185,9 +182,9 @@ public class CMTest extends ContactManagerImp {
 	public void testAddMeetingNotes() {
 		addNewContact("Joe", "notes");
 		addNewContact("Liz", "more notes");
-		int i = addNewPastMeeting(contactList, pastCal, "");
-		addMeetingNotes(i, "New Notes");
-		PastMeeting m = getPastMeeting(i);
+		addNewPastMeeting(contactList, pastCal, "");
+		addMeetingNotes(1, "New Notes");
+		PastMeeting m = getPastMeeting(1);
 		Boolean check = m.getNotes().equalsIgnoreCase("New Notes");
 		assertTrue(check);
 	}
@@ -296,33 +293,5 @@ public class CMTest extends ContactManagerImp {
 		assertTrue(s.contains("Notes: notes"));
 	}
 	 
-	@Test public void testEditMeetingNotes() { 
-	 
-		 
-	 }
-	 
-	/*@Test public void testIfIsPastMeeting() { 
-	 
-	 }
-	 }
-	 
-	 @Test public void testContains() { fail("Not yet implemented"); // TODO 
-	 
-	 }
-	 */
-	@Test
-	public void testEmptyLists() {
-		addNewContact("Joe", "notes");
-		addNewContact("Liz", "Other notes");
-		int[] ids = { 1, 2 };
-		Set<Contact> getContactsFrom = getContacts(ids);
-		addNewPastMeeting(getContactsFrom, pastCal, "meeting");
-		addFutureMeeting(getContactsFrom, futCal);
-		emptyLists();
-		Contact c = getContact("1");
-		Meeting m = getMeeting(1);
-		assertEquals(null, c);
-		assertEquals(null, m);
-	}
 
 }
