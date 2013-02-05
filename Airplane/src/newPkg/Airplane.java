@@ -11,11 +11,13 @@ public class Airplane {
 
 	private int kind;
 	private Flying hIF;
+	private LiftOff fIL;
 	
-	public Airplane(int i, Flying fly) {
+	public Airplane(int i, Flying fly, LiftOff lift) {
 		// TODO Auto-generated constructor stub
 		kind = i;
 		hIF = fly;
+		fIL = lift;
 	}
 
 	public String howDoYouFly() {
@@ -32,12 +34,9 @@ public class Airplane {
 	}
 
 	public String howDoYouLiftOff() {
-		switch(kind){
-		case 1: return "Vertically";
-		case 2: return "I liftoff";
-		case 3: return "Horizontally";
-		default: return null;
-		}
+		
+
+		return fIL.howILiftOff();
 	}
 
 }
