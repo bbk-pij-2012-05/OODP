@@ -5,20 +5,30 @@ import static org.junit.Assert.*;
 import newPkg.Airplane;
 import newPkg.FFJ;
 import newPkg.Flying;
+import newPkg.LiftOff;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class AirplaneTest {
 
-	private FlyingFactory flyingFactory;
+	private static FlyingFactory flyingFactory;
 
+	@BeforeClass
+	public static void onlyOnce(){
+		flyingFactory = new FlyingFactory();
+	}
+	
+	
 	@Test
 	public void test(){
-		
-		Flying fly = flyingFactory.createFlying("Fighter Jet");
-		
 		String expected = "Like a fighter jet";
 		String returned = null;
+		
+		Flying fly = harrierFactory.createFlying();
+		
+		LiftOff liftoff = harrierFactory.createLiftOff();
+		
 		
 		Airplane classUnderTest = new Airplane(1, fly);
 		

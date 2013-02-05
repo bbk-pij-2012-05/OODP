@@ -8,7 +8,7 @@ public class FFJ implements Flying {
 	@Override
 	public String howIFLly() {
 		// TODO Auto-generated method stub
-		return "like a fighter jet";
+		return "Like a fighter jet";
 	}
 
 }
